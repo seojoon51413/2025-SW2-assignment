@@ -1,4 +1,4 @@
-int led = 8 ; 
+int led = 8 ; //7번 핀에 회로를 꼽고 힘을 잘못 줘서 고장나 버려서 불가피하게 8번으로 하게됐습니다 죄송합니다.
 double period = 100; //주기
 double duty =0 ;//초기 밝기
 double count = 0.01 ; //duty의 증가값
@@ -40,10 +40,10 @@ void loop() {
   int period_count=light_time/period;//0.5초까지 주기가 몇번 반복하는지
   c = period_count/100; //같은 duty가 어느 만큼의 시간을 반복해야하는지 ( duty는 정수 값 이기 때문에)
   for (int i =0 ; i<=1000000; i=i+period){ 
-    //1초가 될 때까지
+    //1초가 될 때까지(0.5초까지 천천히 밝아졌다가 다시 1초까지 서서히 꺼짐)
     duty=set_duty(duty);
-    bright_time=period*duty;
-    black_time=period-bright_time;
+    bright_time=period*duty;//pwm구현
+    black_time=period-bright_time; //pwm 구현
     for (int d=0 ; d<=c ;d++){
       digitalWrite(led,HIGH);
       delayMicroseconds(bright_time);//pwm 구현
@@ -54,3 +54,4 @@ void loop() {
   }
   k=(k+1)%3;
 }
+
