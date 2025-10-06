@@ -44,7 +44,7 @@ float median(float dist_list[]){
   if (N %2 ==0 ){
     return (copy[N/2-1]+copy[N/2])/2.0;
   }else{
-    return copy[N/2];
+    return copy[(N+1)/2-1];
   }
 }
 void setup() {
@@ -124,3 +124,4 @@ float USS_measure(int TRIG, int ECHO)
   //        = 100,000 * 0.001 * 0.5 * 346
   //        = 17,300 mm  ==> 17.3m
 }
+
