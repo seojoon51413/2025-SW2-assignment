@@ -18,8 +18,8 @@
 #define PULSE_DURATION 10 // ultra-sound Pulse Duration (unit: usec)
 #define _DIST_MIN 10.0 // minimum distance to be measured (unit: mm)
 #define _DIST_MAX 350.0   // maximum distance to be measured (unit: mm)
-#define _DUTY_MIN 1700//0
-#define _DUTY_MAX 3200//90
+#define _DUTY_MIN 1700//90
+#define _DUTY_MAX 3200//180
 
 #define TIMEOUT ((INTERVAL / 2) * 1000.0) // maximum echo waiting time (unit: usec)
 #define SCALE (0.001 * 0.5 * SND_VEL) // coefficent to convert duration to distance
@@ -61,13 +61,17 @@ void loop() {
       dist_filtered = dist_raw;
       dist_prev = dist_raw;
   } 
-  if (dist_filtered <= 10.0) {
-    myServo.writeMicroseconds(_DUTY_MAX);
-  }else if (dist_filtered >= 180.0){
+  if (dist_filtered <= 50.0) {
+    myServo.writeMicroseconds(_DUTY_MIN);
+    for(int i=0; i<(_DUTY_MAX-_DUTY_MIN);i++){
+      myServo.writeMicroseconds(_DUTY_MIN+i);
+      delay(10);
+    }
+  }else if (dist_filtered >= 250.0){
     myServo.writeMicroseconds(_DUTY_MAX);
   }else{
     norm = (dist_filtered - _DIST_MIN)/(_DIST_MAX-_DIST_MIN);
-    mapped = sigmoid((norm-0.5)*10.0);
+    mapped = sigmoid((norm-0.5)*7);
     _SET_DUTY = _DUTY_MIN+(_DUTY_MAX-_DUTY_MIN)*mapped;
     //_SET_DUTY = _DUTY_MIN + func(dist_filtered);
     myServo.writeMicroseconds(_SET_DUTY); 
@@ -82,5 +86,6 @@ float USS_measure(int TRIG, int ECHO)
   
   return pulseIn(ECHO, HIGH, TIMEOUT) * SCALE; // unit: mm
 }
+
 
 
