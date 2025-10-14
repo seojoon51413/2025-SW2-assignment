@@ -35,6 +35,9 @@ float mapped;
 float sigmoid(float distance){
   return 1.0/(1.0+exp(-distance));
 }
+float fuc(float distance){
+  return ((_DUTY_MAX-_DUTY_MIN)/(_DIST_MAX-DIST_MIN))*(distance-_DIST_MIN);
+}
 void setup() {
   pinMode(PIN_TRIG, OUTPUT);    // sonar TRIGGER
   pinMode(PIN_ECHO, INPUT);     // sonar ECHO
@@ -66,6 +69,7 @@ void loop() {
     norm = (dist_filtered - _DIST_MIN)/(_DIST_MAX-_DIST_MIN);
     mapped = sigmoid((norm-0.5)*10.0);
     _SET_DUTY = _DUTY_MIN+(_DUTY_MAX-_DUTY_MIN)*mapped;
+    //_SET_DUTY = _DUTY_MIN + func(dist_filtered);
     myServo.writeMicroseconds(_SET_DUTY); 
   }
   last_sampling_time += INTERVAL; 
@@ -78,3 +82,4 @@ float USS_measure(int TRIG, int ECHO)
   
   return pulseIn(ECHO, HIGH, TIMEOUT) * SCALE; // unit: mm
 }
+
